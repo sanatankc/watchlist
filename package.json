@@ -1,0 +1,22 @@
+{
+  "name": "watchlist",
+  "version": "1.0.0",
+  "description": "Watchlist keeps a track of movies you want to watch, suggest movies in your lesiure time and tells you where to watch/stream them.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sanatankc/watchlist/blob/master/README.md"
+  },
+  "keywords": [
+    "movies",
+    "crud",
+    "react",
+    "graphql",
+    "apollo"
+  ],
+  "author": "Sanatan K. Chaudhary",
+  "license": "MIT"
+}
