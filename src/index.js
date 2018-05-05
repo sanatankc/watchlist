@@ -2,10 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
-const getTmdbDetails = require('./utils/getMovieDeails/getTmdbDetails')
+const database = require('./database')
 require('dotenv').config()
 
-getTmdbDetails('191714')
 
 const books = [
   {
@@ -43,6 +42,16 @@ app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 
 // GraphiQL, a visual editor for queries
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+
+// dummy endpoint
+app.get('/test', async (req, res) => {
+
+  const { tmdbId, movieName } = req.query
+  console.log('lol1')
+  const response = await database.addMovie(tmdbId, movieName)
+  console.log('lol')
+  res.json(response)
+})
 
 // Start the server
 app.listen(3000, () => {

@@ -6,7 +6,7 @@ const getStreamDetails = async movie_name => {
     '8': 'netflix',
     '119': 'amazon'
   }
-  const providerLink = {
+  const providersLink = {
     netflix: null,
     amazon: null
   }
@@ -21,19 +21,19 @@ const getStreamDetails = async movie_name => {
   const data = await res.json()
   const offers = data.items[0].offers
 
-  if (!offers) return providerLink
+  if (!offers) return providersLink
 
   for (const offer of offers) {
     const providerId = offer.provider_id
     if (providerId in providers) {
       const provider = providers[providerId]
-      if (providerLink[provider] === null) {
-        providerLink[provider] = offer.urls.standard_web
+      if (providersLink[provider] === null) {
+        providersLink[provider] = offer.urls.standard_web
       }
     }
   }
 
-  return providerLink
+  return providersLink
 }
 
 module.exports = getStreamDetails

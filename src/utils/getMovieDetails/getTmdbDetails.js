@@ -15,7 +15,6 @@ const getTmdbDetails = async tmdbId => {
   const trailer = videos.results[0]
     ? `https://www.youtube.com/watch?v=${videos.results[0].key}`
     : null
-
   return {
     releaseDate: release_date,
     imdbId: imdb_id,
