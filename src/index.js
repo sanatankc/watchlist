@@ -1,56 +1,47 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
-const { makeExecutableSchema } = require('graphql-tools');
-const database = require('./database')
+const express = require('express')
+const bodyParser = require('body-parser')
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
+const { makeExecutableSchema } = require('graphql-tools')
+const mongoose = require('mongoose')
+const expressJWT = require('express-jwt')
+const { resolvers, typeDefs } = require('./schema')
+const addMovieToUser  = require('./db_queries/addMovieToUser')
 require('dotenv').config()
 
-
-const books = [
-  {
-    title: "Harry Potter and the Sorcerer's stone",
-    author: 'J.K. Rowling',
-  },
-  {
-    title: 'Jurassic Park',
-    author: 'Michael Crichton',
-  },
-];
-
-// The GraphQL schema in string form
-const typeDefs = `
-  type Query { books: [Book] }
-  type Book { title: String, author: String }
-`;
-
-// The resolvers
-const resolvers = {
-  Query: { books: () => books },
-};
+// connect to db
+mongoose.connect(process.env.DB_URL)
 
 // Put together a schema
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-});
+})
+
+const auth = expressJWT({
+  secret: process.env.JWT_SECRET,
+  credentialsRequired: false
+})
 
 // Initialize the app
-const app = express();
+const app = express()
 
 // The GraphQL endpoint
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
+app.use('/graphql', bodyParser.json(), auth, graphqlExpress(req => ({
+  schema,
+  context: {
+    user: req.user,
+    JWT_SECRET: process.env.JWT_SECRET
+  }
+})))
 
 // GraphiQL, a visual editor for queries
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 
 // dummy endpoint
 app.get('/test', async (req, res) => {
-
-  const { tmdbId, movieName } = req.query
-  console.log('lol1')
-  const response = await database.addMovie(tmdbId, movieName)
-  console.log('lol')
-  res.json(response)
+  //test
+  const payload = await addMovieToUser('2123', 'sanatankc')
+  res.json(payload)
 })
 
 // Start the server

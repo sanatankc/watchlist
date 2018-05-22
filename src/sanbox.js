@@ -10,5 +10,5 @@ torrentSearch.search('Swadesh', 'Movies', 20)
          console.log(torrents);
      })
      .catch(err => {
-         console.log(err);
-     });
+         console.log(err)
+     })

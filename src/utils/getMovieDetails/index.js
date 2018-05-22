@@ -7,7 +7,6 @@ const getMovieDetails = async (tmdbId, movieName) => {
   // parallel fetch
   const combined_results = await Promise.all([getTmdbDetails(tmdbId), getStreamDetails(movieName)])
   // flatten results
-  console.log(combined_results)
   const merged_data = combined_results.reduce((acc, prev) => Object.assign(acc, prev), {})
   const imdbDetails = await getImdbDetails(merged_data.imdbId)
   return {
