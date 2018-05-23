@@ -49,6 +49,7 @@ const resolvers = {
     },
 
     async addedMovies(obj, args, context)  {
+      if (!context.user) throw new Error('UNAUTHORISED')
       const { username } = context.user
       const addedMoviesByUser =  getAddedMoviesByUser(username)
       return addedMoviesByUser
@@ -82,6 +83,7 @@ const resolvers = {
     },
 
     async addMovie(obj, { tmdbId, movieName }, context) {
+      if (!context.user) throw new Error('UNAUTHORISED')
       const { username } = context.user
       return addMovieToUser(tmdbId, movieName, username)
     },
