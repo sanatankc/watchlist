@@ -5,12 +5,14 @@ const addMovieToDB = require('./db_queries/addMovieToDB')
 const addUserToDB = require('./db_queries/addUserToDB')
 const isUserInDB = require('./db_queries/isUserInDB')
 const addMovieToUser = require('./db_queries/addMovieToUser')
+const getAddedMoviesByUser = require('./db_queries/getAddedMoviesByUser')
 
 const gql = String.raw
 
 const typeDefs = gql`
   type Query {
     getMovie(tmdbId: String!, movieName: String!): Movie,
+    addedMovies: [Movie]
   }
   type Mutation {
     signup(username: String!, password: String!): String
@@ -45,6 +47,12 @@ const resolvers = {
       }
       return movie
     },
+
+    async addedMovies(obj, args, context)  {
+      const { username } = context.user
+      const addedMoviesByUser =  getAddedMoviesByUser(username)
+      return addedMoviesByUser
+    }
   },
 
   Mutation: {
@@ -76,7 +84,7 @@ const resolvers = {
     async addMovie(obj, { tmdbId, movieName }, context) {
       const { username } = context.user
       return addMovieToUser(tmdbId, movieName, username)
-    }
+    },
   }
 }
 
