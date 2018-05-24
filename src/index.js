@@ -4,6 +4,7 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
 const { makeExecutableSchema } = require('graphql-tools')
 const mongoose = require('mongoose')
 const expressJWT = require('express-jwt')
+const cors = require('cors')
 const { resolvers, typeDefs } = require('./schema')
 const addMovieToUser  = require('./db_queries/addMovieToUser')
 require('dotenv').config()
@@ -24,7 +25,7 @@ const auth = expressJWT({
 
 // Initialize the app
 const app = express()
-
+app.use(cors())
 // The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), auth, graphqlExpress(req => ({
   schema,
