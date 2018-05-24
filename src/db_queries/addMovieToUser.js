@@ -9,7 +9,6 @@ module.exports = async (tmdbId, movieName, username) => {
   }
 
   if (await UserMovie.findOne({tmdbId, username})) {
-    console.log('not added')
     return movie
   }
 
@@ -19,6 +18,5 @@ module.exports = async (tmdbId, movieName, username) => {
     isInWatchList: true,
   })
   await userMovie.save()
-  console.log('added')
   return movie
 }
