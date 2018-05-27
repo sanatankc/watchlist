@@ -25,7 +25,10 @@ const auth = expressJWT({
 
 // Initialize the app
 const app = express()
-app.use(cors())
+app.use(cors({
+  credentials: true,
+  origin: 'http://localhost:3000'
+}))
 // The GraphQL endpoint
 app.use('/graphql', bodyParser.json(), auth, graphqlExpress(req => ({
   schema,
