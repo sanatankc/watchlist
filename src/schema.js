@@ -71,7 +71,7 @@ const resolvers = {
     },
 
     async login(obj, { username, password }, context) {
-      const isUser = await isUserInDB(username, password)\
+      const isUser = await isUserInDB(username, password)
       if (isUser) {
         return jwt.sign(
           { username },
