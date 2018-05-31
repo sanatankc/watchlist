@@ -5,11 +5,14 @@ module.exports = async username => {
   const userMovie =  await UserMovie.find({ username })
   const filteredForTmdbId = userMovie.map(data => ({tmdbId: data.tmdbId}))
   const movies = await Movie.find().or(filteredForTmdbId)
-  const uniqueMovies = [{}]
-  movies.forEach(movie => {
-    if (!uniqueMovies[0][`${movie.tmdbId}`]) {
-      uniqueMovies[0][`${movie.tmdbId}`] = movie
+  const uniqueTmdbIds = new Set(movies
+    .map(movie => movie.tmdbId))
+  const uniqueMovies = movies.filter(movie => {
+    if (uniqueTmdbIds.has(movie.tmdbId)) {
+      uniqueTmdbIds.delete(movie.tmdbId)
+      return true
     }
+    return false
   })
-  return Object.values(uniqueMovies[0])
+  return uniqueMovies
 }
