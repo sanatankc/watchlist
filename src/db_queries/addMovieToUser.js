@@ -9,7 +9,7 @@ module.exports = async (tmdbId, movieName, username) => {
   }
 
   if (await UserMovie.findOne({tmdbId, username})) {
-    return movie
+    throw new Error('ALREADY_EXISTS')
   }
 
   const userMovie = new UserMovie({
