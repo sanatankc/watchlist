@@ -18,9 +18,11 @@ const getStreamDetails = async movie_name => {
     method: 'post',
     body: JSON.stringify(query)
   })
-  const data = await res.json()
-  const offers = data.items[0].offers
 
+  const data = await res.json()
+  if (!data.items[0]) return providersLink
+
+  const offers = data.items[0].offers
   if (!offers) return providersLink
 
   for (const offer of offers) {
