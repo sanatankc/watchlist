@@ -6,4 +6,5 @@ module.exports = mongoose.model('UserMovie', Schema({
   username: String,
   isInWatchList: Boolean,
   userRating: String,
+  notes: String
 }))
