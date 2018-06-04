@@ -7,6 +7,7 @@ const isUserInDB = require('./db_queries/isUserInDB')
 const addMovieToUser = require('./db_queries/addMovieToUser')
 const getAddedMoviesByUser = require('./db_queries/getAddedMoviesByUser')
 const updateMovie = require('./db_queries/updateMovie')
+const updateUserMovie = require('./db_queries/updateUserMovie')
 
 const gql = String.raw
 
@@ -33,9 +34,15 @@ const typeDefs = gql`
       netflix: String,
       amazon: String
     ): Movie,
+
+    updateUserMovie(
+      tmdbId: String,
+      isInWatchList: Boolean,
+      notes: String
+    ): UserMovie,
   }
 
-  type Movie @cacheControl(maxAge: 60) {
+  type Movie @cacheControl(maxAge: 240) {
     tmdbId: String
     imdbId: String
     name: String
@@ -49,6 +56,12 @@ const typeDefs = gql`
     trailer: String
     netflix: String
     amazon: String
+  }
+
+  type UserMovie @cacheControl(maxAge: 240) {
+    tmdbId: String,
+    isInWatchList: Boolean,
+    notes: String
   }
 `
 
@@ -103,9 +116,13 @@ const resolvers = {
       return addMovieToUser(tmdbId, movieName, username)
     },
 
-    async updateMovie(obj, args, context) {
-      const { tmdbId, ...rest } = args
+    async updateMovie(obj, {tmdbId, ...rest}, context) {
       return await updateMovie(tmdbId, rest)
+    },
+
+    async updateUserMovie(obj, {tmdbId, ...rest}, context) {
+      const { username } = context.user
+      return await updateUserMovie(tmdbId, rest, username)
     }
   }
 }
