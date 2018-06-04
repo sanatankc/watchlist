@@ -14,7 +14,7 @@ const gql = String.raw
 const typeDefs = gql`
   type Query {
     getMovie(tmdbId: String!, movieName: String!): Movie,
-    getAddedMovies: [Movie]
+    getAddedMovies(isInWatchList: Boolean): [Movie]
   }
   type Mutation {
     signup(username: String!, password: String!): String
@@ -79,7 +79,7 @@ const resolvers = {
     async getAddedMovies(obj, args, context)  {
       if (!context.user) throw new Error('UNAUTHORISED')
       const { username } = context.user
-      const addedMoviesByUser =  getAddedMoviesByUser(username)
+      const addedMoviesByUser =  getAddedMoviesByUser(username, args.isInWatchList)
       return addedMoviesByUser
     }
   },
