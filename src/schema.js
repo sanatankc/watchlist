@@ -8,6 +8,7 @@ const addMovieToUser = require('./db_queries/addMovieToUser')
 const getAddedMoviesByUser = require('./db_queries/getAddedMoviesByUser')
 const updateMovie = require('./db_queries/updateMovie')
 const updateUserMovie = require('./db_queries/updateUserMovie')
+const deleteMovieForUser = require('./db_queries/deleteMovieForUser')
 
 const gql = String.raw
 
@@ -40,6 +41,10 @@ const typeDefs = gql`
       isInWatchList: Boolean,
       notes: String
     ): UserMovie,
+
+    deleteMovie(
+      tmdbId: String
+    ): Movie
   }
 
   type Movie @cacheControl(maxAge: 240) {
@@ -123,6 +128,11 @@ const resolvers = {
     async updateUserMovie(obj, {tmdbId, ...rest}, context) {
       const { username } = context.user
       return await updateUserMovie(tmdbId, rest, username)
+    },
+
+    async deleteMovie(obj, { tmdbId}, context) {
+      const { username } = context.user
+      return await deleteMovieForUser(tmdbId, username)
     }
   }
 }
