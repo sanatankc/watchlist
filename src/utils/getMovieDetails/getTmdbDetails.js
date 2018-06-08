@@ -13,7 +13,7 @@ const getTmdbDetails = async tmdbId => {
     videos
   } = data
   const trailer = videos.results[0]
-    ? `https://www.youtube.com/watch?v=${videos.results[0].key}`
+    ? videos.results[0].key
     : null
   return {
     releaseDate: release_date,
